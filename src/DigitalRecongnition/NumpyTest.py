@@ -17,9 +17,9 @@ print np.dot(a,b)
 print a.dot(b)
 
 print 'c:',c
-# 对列进行求和 axis = 0
+# 对列求和 axis = 0
 print 'np.sum(c,axis=0):',np.sum(c,axis=0)
-# 对行进行求和 axis = 0
+# 对行求和 axis = 0
 print 'np.sum(c,axis=1):',np.sum(c,axis=1)
 print 'np.min(c):',np.min(c,axis=0)
 print 'np.max(c):',np.max(c)
