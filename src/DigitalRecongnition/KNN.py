@@ -1,6 +1,7 @@
 # coding=utf-8
 
 from numpy import *
+from os import listdir
 import operator
 import matplotlib
 import matplotlib.pyplot as plt
@@ -42,11 +43,21 @@ def autoNorm(dataSet):
     minVals = dataSet.min(0)
     maxVals = dataSet.max(0)
     ranges = maxVals - minVals
-    normdataSet = zeros(shape(dataSet))
+    normDataSet = zeros(shape(dataSet))
     m = dataSet.shape[0]
-    normDataSet = dataSet - tile(minVals,(m,1))
+    normDataSet = dataSet - tile(ranges, (m, 1))
     normDataSet = normDataSet/tile(ranges,(m,1))
     return normDataSet,ranges,minVals
+
+def img2vector(filename):
+    returnVect = zeros((1,1024))
+    fr = open(filename)
+    for i in range(32):
+        lineStr = fr.readline()
+        for j in range(32):
+            returnVect[0,32*i+j] = int(lineStr[j])
+    return returnVect
+
 
 
 
