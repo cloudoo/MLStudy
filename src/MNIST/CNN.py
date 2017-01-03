@@ -4,6 +4,7 @@ import struct
 import matplotlib.pyplot as plt
 import time
 from scipy.signal import convolve2d
+import Image
 
 # 卷积神经网络结构
 class CNNNet:
@@ -419,9 +420,7 @@ def cnntest(net, x, y):
     
     pred = np.argmax(net.o, 1);
     pred = np.array(pred.reshape(1, pred.shape[0]))[0];
-    
-    y = np.argmax(y, 1);
-    
+
     bad = [];
     
     for i in range(m):
@@ -435,7 +434,7 @@ def cnntest(net, x, y):
 def model_create(dataFolder, resultFolder, modelFile, errpngFile=None):
     train_x = loadImages(dataFolder + 'train-images.idx3-ubyte');  # (60000, 28, 28)
     train_y = loadLabels(dataFolder + 'train-labels.idx1-ubyte');  # (60000)
-    
+
     alpha = 1;  # 学习率
     batchsize = 50;  # 每次挑出一个batchsize的batch来训练
     numepochs = 1;  # 迭代次数
@@ -452,7 +451,7 @@ def model_create(dataFolder, resultFolder, modelFile, errpngFile=None):
 def model_test(dataFolder, modelfile):
     test_x = loadImages(dataFolder + 't10k-images.idx3-ubyte');  # (10000, 28, 28)
     test_y = loadLabels(dataFolder + 't10k-labels.idx1-ubyte');  # (10000)
-    
+
     cnn = CNNNet();
     cnn.importModel(modelfile);
     
@@ -460,13 +459,35 @@ def model_test(dataFolder, modelfile):
     print '正确率: ', (1 - err) * 100, '%';
 
 def main():
-    dataFolder = '/home/hadoop/ProgramDatas/MNISTDataset/';
-    resultFolder = '/home/hadoop/ProgramDatas/MLStudy/MNIST/';
+    # dataFolder = '/home/hadoop/ProgramDatas/MNISTDataset/';
+    dataFolder = 'D:\\02_code_program\\05_python\\data\\';
+    resultFolder = 'D:\\02_code_program\\05_python\\result\\';
 #     dataFolder = 'E:/TestDatas/MNISTDataset/';
 #     resultFolder = 'E:/TestDatas/MNIST/';
     modelFile = resultFolder + 'model.txt';
     errpngFile = resultFolder + 'error.png';
-    model_create(dataFolder, resultFolder, modelFile, errpngFile);
+    # model_create(dataFolder, resultFolder, modelFile, errpngFile);
     model_test(dataFolder, modelFile);
 
-main();
+# main();
+
+if __name__ == '__main__':
+    # main()
+    region = Image.open("D:\\02_code_program\\05_python\\image\\test1.jpg")
+    region = region.convert('L')
+    region = np.array(region)
+    height, width = np.shape(region)
+    w_surplus = 28 - width
+    w_append_left = np.ceil(w_surplus / 2)
+    w_append_right = w_surplus - w_append_left
+    region = np.hstack((np.zeros((height, w_append_left)) + 255, region, np.zeros((height, w_append_right)) + 255))
+    region  = np.expand_dims(region, 0)
+    region = region / 255.0
+
+    modelFile = 'D:\\02_code_program\\05_python\\result\\model.txt'
+    cnn = CNNNet();
+    cnn.importModel(modelFile);
+    net = cnnff(cnn, region);
+    print net.o
+    pred = np.argmax(net.o, 1);
+    print pred
